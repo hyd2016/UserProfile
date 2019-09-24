@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">hotsoon_user_profile</string>
+    <string name="title_user_name">Hello 火山</string>
+    <string name="user_photo">Hello 火山</string>
+    <string name="fans_num">8781</string>
+    <string name="fans_name">粉丝</string>
+    <string name="attention_num">61</string>
+    <string name="attention_name">关注</string>
+    <string name="hot_num">5万</string>
+    <string name="hot_name">火力</string>
+    <string name="user_recommend" />
+    <string name="live_num">直播数量：22</string>
+    <string name="user_gift_num">礼物贡献榜</string>
+    <string name="liive_time">25\n七月</string>
+    <string name="img_zhiboshuliang">zhiboshuliang</string>
+    <string name="Null" />
+    <string name="IntenetFail">网络请求失败</string>
+    <string name="sendPersonMessage">发私信</string>
+    <string name="showRecommend">显示推荐</string>
+    <string name="dialogIfUnattention">确定不关注此人？</string>
+    <string name="yes">确定</string>
+    <string name="no">取消</string>
+    <string name="music_history">我的播放记录</string>
+    <string name="searchMusic">请输入音乐名</string>
+    <string name="deleteConfirm">确定删除这条数据？</string>
+</resources>
