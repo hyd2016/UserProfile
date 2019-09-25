@@ -1,5 +1,9 @@
 package com.example.hotsoon_user_profiiles;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +20,12 @@ import android.os.Messenger;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +72,8 @@ public class MainActivity extends Activity {
     private static boolean ISRECOMMEND = false;
     //关注状态
     private static boolean ATTENTION = false;
+
+    private float mDensity;
 
 
     @BindView(R.id.btn_title_back)
@@ -211,7 +221,10 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        unbindService(mMusicServiceConnection);
+        if (mMusicServiceConnection != null){
+            unbindService(mMusicServiceConnection);
+        }
+
         super.onDestroy();
     }
 
@@ -343,7 +356,7 @@ public class MainActivity extends Activity {
         RecommendUserAdapt recommendUserAdapt = new RecommendUserAdapt(mRecommendUserList);
         recyclerViewRecommend.setAdapter(recommendUserAdapt);
 
-        layoutRecommend.setVisibility(View.VISIBLE);
+        //layoutRecommend.setVisibility(View.VISIBLE);
     }
 
 
@@ -494,6 +507,7 @@ public class MainActivity extends Activity {
             btnAttention.setBackground(getDrawable(R.drawable.btn_circle_white));
             btnAttentioned.setVisibility(View.VISIBLE);
             initRecommend();
+            animateOpen();
             ISRECOMMEND = true;
             userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_green_up));
         }
@@ -528,24 +542,97 @@ public class MainActivity extends Activity {
     public void onRecommend(){
         if(ISRECOMMEND){
             if(ATTENTION){
-                userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_green_down));
+
+                ObjectAnimator animator = ObjectAnimator.ofFloat(findViewById(R.id.user_recommend),"rotation",0,180);
+                animator.setDuration(200);
+                animator.start();
+                //userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_green_down));
             }else {
-                userRecommend.setBackground(getDrawable(R.drawable.btn_triangle));
+
+                ObjectAnimator animator = ObjectAnimator.ofFloat(findViewById(R.id.user_recommend),"rotation",180,0);
+                animator.setDuration(200);
+                animator.start();
+                //userRecommend.setBackground(getDrawable(R.drawable.btn_triangle));
             }
 
-            layoutRecommend.setVisibility(View.GONE);
+            animateClose();
+           // layoutRecommend.setVisibility(View.GONE);
             ISRECOMMEND = false;
 
         }else {
             if(ATTENTION){
-                userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_green_up));
+                ObjectAnimator animator = ObjectAnimator.ofFloat(findViewById(R.id.user_recommend),"rotation",180,0);
+                animator.setDuration(200);
+                animator.start();
+                //userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_green_up));
             }else {
-                userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_normal));
+                ObjectAnimator animator = ObjectAnimator.ofFloat(findViewById(R.id.user_recommend),"rotation",0,180);
+                animator.setDuration(200);
+                animator.start();
+               // userRecommend.setBackground(getDrawable(R.drawable.btn_triangle_normal));
             }
-            layoutRecommend.setVisibility(View.VISIBLE);
+
+            animateOpen();
+            //layoutRecommend.setVisibility(View.VISIBLE);
             initRecommend();
             ISRECOMMEND = true;
         }
     }
+
+    private void animateOpen() {
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        final int targetHeight = (int) (getResources().getDisplayMetrics().density * 190 + 0.5);
+        layoutRecommend.getLayoutParams().height = targetHeight;
+        layoutRecommend.setVisibility(View.VISIBLE);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float value = (float) valueAnimator.getAnimatedValue();
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layoutRecommend.getLayoutParams();
+                layoutParams.height = targetHeight;
+                layoutParams.bottomMargin = -targetHeight + (int) (value * targetHeight);
+                layoutRecommend.setLayoutParams(layoutParams);
+            }
+        });
+        animator.setDuration(200);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                layoutRecommend.setVisibility(View.VISIBLE);
+            }
+        });
+        animator.setInterpolator(new LinearInterpolator());
+        animator.start();
+
+    }
+
+    private void animateClose() {
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        final int targetHeight = (int) (getResources().getDisplayMetrics().density * 190 + 0.5);
+        layoutRecommend.getLayoutParams().height = targetHeight;
+        layoutRecommend.setVisibility(View.VISIBLE);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float value = (float) valueAnimator.getAnimatedValue();
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layoutRecommend.getLayoutParams();
+                layoutParams.height = targetHeight;
+                layoutParams.bottomMargin =  - (int) (value * targetHeight);
+                layoutRecommend.setLayoutParams(layoutParams);
+            }
+        });
+        animator.setDuration(200);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                layoutRecommend.setVisibility(View.INVISIBLE);
+            }
+        });
+        animator.setInterpolator(new LinearInterpolator());
+        animator.start();
+
+
+    }
+
 
 }
