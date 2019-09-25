@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="45dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:background="#fff">
 
     <ImageView
         android:id="@+id/user_img_send_fire"
